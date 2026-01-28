@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">Life 2026 Helper</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/events">Event Manager</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/users">Users</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 class="mb-4">Event Manager - Money Tracker</h1>
+          
+          <!-- Summary Cards -->
+          <div class="row mb-4">
+            <div class="col-md-4">
+              <div class="card bg-success text-white">
+                <div class="card-body">
+                  <h5 class="card-title">Total Income</h5>
+                  <p class="card-text h4">¥<%= income %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card bg-danger text-white">
+                <div class="card-body">
+                  <h5 class="card-title">Total Expenses</h5>
+                  <p class="card-text h4">¥<%= expenses %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card <% if(balance >= 0) { %>bg-primary<% } else { %>bg-warning<% } %> text-white">
+                <div class="card-body">
+                  <h5 class="card-title">Balance</h5>
+                  <p class="card-text h4">¥<%= balance %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Event Button -->
+          <div class="mb-4">
+            <a href="/events/add" class="btn btn-primary btn-lg">
+              <i class="bi bi-plus-circle"></i> Add Event
+            </a>
+          </div>
+
+          <!-- Events Table -->
+          <div class="card">
+            <div class="card-header bg-dark text-white">
+              <h5 class="mb-0">Events List</h5>
+            </div>
+            <div class="card-body">
+              <% if(events.length === 0) { %>
+                <p class="text-muted text-center">No events yet. <a href="/events/add">Add one now!</a></p>
+              <% } else { %>
+                <div class="table-responsive">
+                  <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                      <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% events.forEach(function(event) { %>
+                        <tr>
+                          <td><%= new Date(event.date).toLocaleDateString() %></td>
+                          <td><%= event.description %></td>
+                          <td><span class="badge bg-secondary"><%= event.category %></span></td>
+                          <td>
+                            <% if(event.type === 'income') { %>
+                              <span class="badge bg-success">Income</span>
+                            <% } else { %>
+                              <span class="badge bg-danger">Expense</span>
+                            <% } %>
+                          </td>
+                          <td>
+                            <% if(event.type === 'income') { %>
+                              <span class="text-success fw-bold">+¥<%= parseFloat(event.amount).toFixed(2) %></span>
+                            <% } else { %>
+                              <span class="text-danger fw-bold">-¥<%= parseFloat(event.amount).toFixed(2) %></span>
+                            <% } %>
+                          </td>
+                          <td>
+                            <a href="/events/edit/<%= event.id %>" class="btn btn-sm btn-warning">
+                              <i class="bi bi-pencil"></i> Edit
+                            </a>
+                            <form method="POST" action="/events/delete/<%= event.id %>" style="display:inline;">
+                              <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?');">
+                                <i class="bi bi-trash"></i> Delete
+                              </button>
+                            </form>
+                          </td>
+                        </tr>
+                      <% }); %>
+                    </tbody>
+                  </table>
+                </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

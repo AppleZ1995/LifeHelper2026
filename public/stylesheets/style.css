@@ -6,3 +6,187 @@ body {
 a {
   color: #00B7FF;
 }
+/* Calendar Styles */
+#calendar {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  border: 1px solid #dee2e6;
+}
+
+.fc {
+  font-family: inherit;
+}
+
+.fc .fc-button-primary {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.fc .fc-button-primary:hover {
+  background-color: #0b5ed7;
+  border-color: #0a58ca;
+}
+
+.fc .fc-button-primary.fc-button-active {
+  background-color: #0b5ed7;
+  border-color: #0a58ca;
+}
+
+.fc-theme-standard .fc-col-header-cell {
+  background-color: #e9ecef;
+  color: #212529;
+  font-weight: 600;
+}
+
+.fc-event {
+  cursor: pointer;
+}
+
+/* Event Manager Styles */
+.card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+  margin-bottom: 1.5rem;
+}
+
+.card-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.card-header h5 {
+  font-weight: 600;
+  margin: 0;
+}
+
+.table-responsive {
+  border-radius: 0.5rem;
+}
+
+.table {
+  margin-bottom: 0;
+}
+
+.table thead th {
+  border-bottom: 2px solid #dee2e6;
+  font-weight: 600;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.badge {
+  padding: 0.4rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.btn-sm {
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
+}
+
+.text-success {
+  color: #198754 !important;
+}
+
+.text-danger {
+  color: #dc3545 !important;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #212529;
+  margin-bottom: 0.5rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.alert {
+  border-radius: 0.5rem;
+}
+
+/* Summary Cards */
+.card.bg-success,
+.card.bg-danger,
+.card.bg-primary,
+.card.bg-warning {
+  border-radius: 0.5rem;
+  border: none;
+}
+
+.card.bg-success .card-title,
+.card.bg-danger .card-title,
+.card.bg-primary .card-title,
+.card.bg-warning .card-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.card.bg-success .h4,
+.card.bg-danger .h4,
+.card.bg-primary .h4,
+.card.bg-warning .h4 {
+  font-weight: 700;
+  margin: 0.5rem 0 0 0;
+}
+
+/* Dashboard Layout Styles */
+.container-fluid {
+  padding: 0 2rem;
+}
+
+.card {
+  border-radius: 0.5rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+#calendar {
+  padding: 1rem;
+  min-height: 600px;
+}
+
+.fc-event-title {
+  font-size: 0.85rem;
+  padding: 2px 4px;
+  white-space: normal;
+}
+
+/* Chart Container Styles */
+#overviewChart,
+#categoryChart {
+  max-height: 400px;
+}
+
+/* Summary Card Enhancement */
+.card.bg-success,
+.card.bg-danger,
+.card.bg-primary,
+.card.bg-warning {
+  border-radius: 0.75rem;
+  border: none;
+}
+
+.card.bg-success .card-title,
+.card.bg-danger .card-title,
+.card.bg-primary .card-title,
+.card.bg-warning .card-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}

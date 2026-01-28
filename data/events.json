@@ -1,0 +1,11 @@
+[
+  {
+    "id": "1769592793641",
+    "description": "Buy one KFC chicken .",
+    "amount": 30,
+    "type": "expense",
+    "date": "2026-01-28",
+    "category": "Food",
+    "createdAt": "2026-01-28T09:33:13.641Z"
+  }
+]
