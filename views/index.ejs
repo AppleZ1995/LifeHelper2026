@@ -24,6 +24,9 @@
               <a class="nav-link" href="/events">Event Manager</a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="/loans">Loan Manager</a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="/users">Users</a>
             </li>
           </ul>
@@ -59,6 +62,36 @@
                 <div class="card-body">
                   <h5 class="card-title">Balance</h5>
                   <p class="card-text h4">¥<%= balance %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Loan Summary Cards -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <h6 class="card-title text-muted">Total Loan Principal</h6>
+                      <p class="card-text h5 text-danger fw-bold">¥<%= totalLoans %></p>
+                    </div>
+                    <a href="/loans" class="btn btn-sm btn-outline-primary">Manage</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <h6 class="card-title text-muted">Active Loans</h6>
+                      <p class="card-text h5"><%= activeLoans %></p>
+                    </div>
+                    <a href="/loans" class="btn btn-sm btn-outline-primary">View All</a>
+                  </div>
                 </div>
               </div>
             </div>

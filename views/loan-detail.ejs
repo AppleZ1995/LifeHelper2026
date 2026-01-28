@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">Life 2026 Helper</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/events">Event Manager</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/loans">Loan Manager</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/users">Users</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><%= loan.name %></h1>
+            <a href="/loans" class="btn btn-secondary">Back to Loans</a>
+          </div>
+
+          <!-- Loan Information Cards -->
+          <div class="row mb-4">
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title text-muted">Principal Amount</h6>
+                  <p class="card-text h5 text-danger fw-bold">¥<%= parseFloat(loan.principal).toFixed(2) %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title text-muted">Interest Rate</h6>
+                  <p class="card-text h5"><%= parseFloat(loan.interestRate).toFixed(2) %>%</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title text-muted">Total Paid</h6>
+                  <p class="card-text h5 text-success fw-bold">¥<%= totalPaid %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title text-muted">Remaining</h6>
+                  <p class="card-text h5 text-warning fw-bold">¥<%= remaining %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Loan Details -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header bg-dark text-white">
+                  <h5 class="mb-0">Loan Information</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <p class="text-muted mb-1">Lender</p>
+                      <p class="h6"><%= loan.lender %></p>
+                    </div>
+                    <div class="col-md-6">
+                      <p class="text-muted mb-1">Status</p>
+                      <p>
+                        <% if (loan.status === 'active') { %>
+                          <span class="badge bg-success">Active</span>
+                        <% } else if (loan.status === 'completed') { %>
+                          <span class="badge bg-info">Completed</span>
+                        <% } else { %>
+                          <span class="badge bg-warning">Paused</span>
+                        <% } %>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <p class="text-muted mb-1">Start Date</p>
+                      <p class="h6"><%= loan.startDate %></p>
+                    </div>
+                    <div class="col-md-6">
+                      <p class="text-muted mb-1">End Date</p>
+                      <p class="h6"><%= loan.endDate || 'Not specified' %></p>
+                    </div>
+                  </div>
+                  <% if (loan.description) { %>
+                    <div class="mb-3">
+                      <p class="text-muted mb-1">Description</p>
+                      <p class="h6"><%= loan.description %></p>
+                    </div>
+                  <% } %>
+                  <div class="d-flex gap-2">
+                    <a href="/loans/edit/<%= loan.id %>" class="btn btn-warning btn-sm">Edit</a>
+                    <form method="POST" action="/loans/<%= loan.id %>/delete" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+                      <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Payment Calculator -->
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header bg-dark text-white">
+                  <h5 class="mb-0">Add Payment Record</h5>
+                </div>
+                <div class="card-body">
+                  <form id="paymentForm">
+                    <div class="mb-3">
+                      <label for="paymentDate" class="form-label">Payment Date *</label>
+                      <input type="date" class="form-control" id="paymentDate" name="paymentDate" required>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label for="principal" class="form-label">Principal (¥) *</label>
+                        <input type="number" class="form-control" id="principal" name="principal" step="0.01" required>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label for="interest" class="form-label">Interest (¥) *</label>
+                        <input type="number" class="form-control" id="interest" name="interest" step="0.01" required>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="amount" class="form-label">Total Payment (¥) *</label>
+                      <input type="number" class="form-control" id="amount" name="amount" step="0.01" required readonly style="background-color: #f5f5f5;">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Record Payment</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment History -->
+          <div class="card">
+            <div class="card-header bg-dark text-white">
+              <h5 class="mb-0">Payment History</h5>
+            </div>
+            <div class="card-body">
+              <% if (payments.length > 0) { %>
+                <div class="table-responsive">
+                  <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                      <tr>
+                        <th>Payment Date</th>
+                        <th>Principal</th>
+                        <th>Interest</th>
+                        <th>Total Payment</th>
+                        <th>Balance</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% payments.forEach(payment => { %>
+                        <tr>
+                          <td><%= payment.paymentDate %></td>
+                          <td class="text-success">¥<%= parseFloat(payment.principal).toFixed(2) %></td>
+                          <td class="text-warning">¥<%= parseFloat(payment.interest).toFixed(2) %></td>
+                          <td class="fw-bold">¥<%= parseFloat(payment.amount).toFixed(2) %></td>
+                          <td>¥<%= parseFloat(payment.balance).toFixed(2) %></td>
+                        </tr>
+                      <% }); %>
+                    </tbody>
+                  </table>
+                </div>
+              <% } else { %>
+                <div class="alert alert-info">
+                  No payments recorded yet.
+                </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Auto-calculate total payment
+      document.getElementById('principal').addEventListener('input', updateTotal);
+      document.getElementById('interest').addEventListener('input', updateTotal);
+
+      function updateTotal() {
+        const principal = parseFloat(document.getElementById('principal').value) || 0;
+        const interest = parseFloat(document.getElementById('interest').value) || 0;
+        document.getElementById('amount').value = (principal + interest).toFixed(2);
+      }
+
+      // Handle form submission
+      document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(document.getElementById('paymentForm'));
+        const data = Object.fromEntries(formData);
+
+        try {
+          const response = await fetch('/loans/<%= loan.id %>/payment', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+          });
+
+          if (response.ok) {
+            alert('Payment recorded successfully!');
+            location.reload();
+          } else {
+            alert('Error recording payment');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Error recording payment');
+        }
+      });
+    </script>
+  </body>
+</html>

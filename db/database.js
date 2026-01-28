@@ -51,6 +51,61 @@ function initializeTables() {
       console.error('Error creating index:', err.message);
     }
   });
+
+  // Create loans table
+  db.run(`
+    CREATE TABLE IF NOT EXISTS loans (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      lender TEXT NOT NULL,
+      principal REAL NOT NULL,
+      interestRate REAL NOT NULL,
+      startDate TEXT NOT NULL,
+      endDate TEXT,
+      term INTEGER,
+      frequency TEXT CHECK(frequency IN ('monthly', 'quarterly', 'yearly')),
+      status TEXT DEFAULT 'active' CHECK(status IN ('active', 'completed', 'paused')),
+      description TEXT,
+      createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
+      updatedAt TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `, (err) => {
+    if (err) {
+      console.error('Error creating loans table:', err.message);
+    } else {
+      console.log('Loans table initialized');
+    }
+  });
+
+  // Create loan payments table
+  db.run(`
+    CREATE TABLE IF NOT EXISTS loan_payments (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      loanId INTEGER NOT NULL,
+      amount REAL NOT NULL,
+      paymentDate TEXT NOT NULL,
+      principal REAL NOT NULL,
+      interest REAL NOT NULL,
+      balance REAL NOT NULL,
+      createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (loanId) REFERENCES loans(id)
+    )
+  `, (err) => {
+    if (err) {
+      console.error('Error creating loan_payments table:', err.message);
+    } else {
+      console.log('Loan payments table initialized');
+    }
+  });
+
+  // Create index for loans
+  db.run(`
+    CREATE INDEX IF NOT EXISTS idx_loans_status ON loans(status)
+  `, (err) => {
+    if (err) {
+      console.error('Error creating index:', err.message);
+    }
+  });
 }
 
 module.exports = db;
