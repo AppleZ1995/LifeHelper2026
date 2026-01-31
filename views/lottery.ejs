@@ -23,10 +23,10 @@
               <a class="nav-link" href="/events">Event Manager</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="/loans">Loan Manager</a>
+              <a class="nav-link" href="/loans">Loan Manager</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/lottery">Lottery Manager</a>
+              <a class="nav-link active" href="/lottery">Lottery Manager</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/users">Users</a>
@@ -41,72 +41,90 @@
         <div class="col-md-12">
           <div class="d-flex justify-content-between align-items-center mb-4">
             <h1><%= title %></h1>
-            <a href="/loans/add" class="btn btn-primary">Add New Loan</a>
+            <a href="/lottery/add" class="btn btn-primary">Add Lottery Ticket</a>
           </div>
 
-          <!-- Loan Summary Card -->
+          <!-- Lottery Summary Cards -->
           <div class="row mb-4">
-            <div class="col-md-6">
+            <div class="col-md-3">
               <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title">Total Loan Principal</h5>
-                  <p class="card-text h4 text-danger">¥<%= totalPrincipal %></p>
+                  <h5 class="card-title">Total Spent</h5>
+                  <p class="card-text h4 text-danger">¥<%= totalSpent %></p>
                 </div>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
               <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title">Active Loans</h5>
-                  <p class="card-text h4"><%= loans.filter(l => l.status === 'active').length %></p>
+                  <h5 class="card-title">Total Winnings</h5>
+                  <p class="card-text h4 text-success">¥<%= totalWinnings %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Net Result</h5>
+                  <p class="card-text h4 <% if (parseFloat(netResult) >= 0) { %>text-success<% } else { %>text-danger<% } %>">¥<%= netResult %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Status Overview</h5>
+                  <p class="card-text">
+                    <span class="badge bg-success"><%= wonCount %> Won</span>
+                    <span class="badge bg-danger"><%= lostCount %> Lost</span>
+                    <span class="badge bg-warning"><%= pendingCount %> Pending</span>
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Loans Table -->
+          <!-- Lottery Tickets Table -->
           <div class="card">
             <div class="card-header bg-dark text-white">
-              <h5 class="mb-0">Your Loans</h5>
+              <h5 class="mb-0">Lottery Tickets</h5>
             </div>
             <div class="card-body">
-              <% if (loans.length > 0) { %>
+              <% if (tickets.length > 0) { %>
                 <div class="table-responsive">
                   <table class="table table-striped table-hover">
                     <thead class="table-dark">
                       <tr>
-                        <th>Loan Name</th>
-                        <th>Lender</th>
-                        <th>Principal</th>
-                        <th>Interest Rate</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
+                        <th>Ticket Number</th>
+                        <th>Amount Spent</th>
+                        <th>Purchase Date</th>
+                        <th>Draw Date</th>
+                        <th>Winning Amount</th>
                         <th>Status</th>
                         <th>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <% loans.forEach(loan => { %>
+                      <% tickets.forEach(ticket => { %>
                         <tr>
-                          <td><strong><%= loan.name %></strong></td>
-                          <td><%= loan.lender %></td>
-                          <td class="text-danger fw-bold">¥<%= parseFloat(loan.principal).toFixed(2) %></td>
-                          <td><%= parseFloat(loan.interestRate).toFixed(2) %>%</td>
-                          <td><%= loan.startDate %></td>
-                          <td><%= loan.endDate || 'N/A' %></td>
+                          <td><strong><%= ticket.ticketNumber %></strong></td>
+                          <td class="text-danger">¥<%= parseFloat(ticket.amount).toFixed(2) %></td>
+                          <td><%= ticket.purchaseDate %></td>
+                          <td><%= ticket.drawDate || 'N/A' %></td>
+                          <td class="text-success fw-bold">¥<%= parseFloat(ticket.winningAmount || 0).toFixed(2) %></td>
                           <td>
-                            <% if (loan.status === 'active') { %>
-                              <span class="badge bg-success">Active</span>
-                            <% } else if (loan.status === 'completed') { %>
-                              <span class="badge bg-info">Completed</span>
+                            <% if (ticket.status === 'won') { %>
+                              <span class="badge bg-success">Won</span>
+                            <% } else if (ticket.status === 'lost') { %>
+                              <span class="badge bg-danger">Lost</span>
                             <% } else { %>
-                              <span class="badge bg-warning">Paused</span>
+                              <span class="badge bg-warning">Pending</span>
                             <% } %>
                           </td>
                           <td>
-                            <a href="/loans/<%= loan.id %>" class="btn btn-sm btn-info">Details</a>
-                            <a href="/loans/edit/<%= loan.id %>" class="btn btn-sm btn-warning">Edit</a>
-                            <form method="POST" action="/loans/<%= loan.id %>/delete" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+                            <a href="/lottery/detail/<%= ticket.id %>" class="btn btn-sm btn-info">View</a>
+                            <a href="/lottery/edit/<%= ticket.id %>" class="btn btn-sm btn-warning">Edit</a>
+                            <form method="POST" action="/lottery/delete/<%= ticket.id %>" style="display:inline;" onsubmit="return confirm('Are you sure?');">
                               <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                             </form>
                           </td>
@@ -117,7 +135,7 @@
                 </div>
               <% } else { %>
                 <div class="alert alert-info">
-                  No loans found. <a href="/loans/add">Add a new loan</a> to get started.
+                  No lottery tickets found. <a href="/lottery/add">Add a new ticket</a> to get started.
                 </div>
               <% } %>
             </div>

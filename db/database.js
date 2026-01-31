@@ -106,6 +106,37 @@ function initializeTables() {
       console.error('Error creating index:', err.message);
     }
   });
+
+  // Create lottery table
+  db.run(`
+    CREATE TABLE IF NOT EXISTS lottery (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      ticketNumber TEXT NOT NULL,
+      amount REAL NOT NULL,
+      purchaseDate TEXT NOT NULL,
+      drawDate TEXT,
+      winningAmount REAL DEFAULT 0,
+      status TEXT DEFAULT 'pending' CHECK(status IN ('pending', 'won', 'lost')),
+      notes TEXT,
+      createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
+      updatedAt TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `, (err) => {
+    if (err) {
+      console.error('Error creating lottery table:', err.message);
+    } else {
+      console.log('Lottery table initialized');
+    }
+  });
+
+  // Create index for lottery
+  db.run(`
+    CREATE INDEX IF NOT EXISTS idx_lottery_status ON lottery(status)
+  `, (err) => {
+    if (err) {
+      console.error('Error creating index:', err.message);
+    }
+  });
 }
 
 module.exports = db;

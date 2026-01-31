@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">Life 2026 Helper</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/events">Event Manager</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/loans">Loan Manager</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/lottery">Lottery Manager</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/users">Users</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-md-8 offset-md-2">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><%= title %></h1>
+            <a href="/lottery" class="btn btn-secondary">Back to Lottery</a>
+          </div>
+
+          <div class="card">
+            <div class="card-header bg-dark text-white">
+              <h5 class="mb-0">Ticket #<%= ticket.ticketNumber %></h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <h6 class="mb-3">Basic Information</h6>
+                  <div class="mb-3">
+                    <label class="form-label text-muted">Ticket Number</label>
+                    <p class="h5"><%= ticket.ticketNumber %></p>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label text-muted">Purchase Date</label>
+                    <p class="h5"><%= ticket.purchaseDate %></p>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label text-muted">Amount Spent</label>
+                    <p class="h5 text-danger">¥<%= parseFloat(ticket.amount).toFixed(2) %></p>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <h6 class="mb-3">Results</h6>
+                  <div class="mb-3">
+                    <label class="form-label text-muted">Draw Date</label>
+                    <p class="h5"><%= ticket.drawDate || 'Not drawn yet' %></p>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label text-muted">Winning Amount</label>
+                    <p class="h5 text-success">¥<%= parseFloat(ticket.winningAmount || 0).toFixed(2) %></p>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label text-muted">Status</label>
+                    <p>
+                      <% if (ticket.status === 'won') { %>
+                        <span class="badge bg-success h5">Won</span>
+                      <% } else if (ticket.status === 'lost') { %>
+                        <span class="badge bg-danger h5">Lost</span>
+                      <% } else { %>
+                        <span class="badge bg-warning h5">Pending</span>
+                      <% } %>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mt-4">
+                <div class="col-md-12">
+                  <h6 class="mb-3">Notes</h6>
+                  <div class="card bg-light">
+                    <div class="card-body">
+                      <%= ticket.notes || 'No notes' %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mt-4">
+                <div class="col-md-12">
+                  <h6 class="mb-3">Net Result</h6>
+                  <div class="alert <% if (parseFloat(ticket.winningAmount || 0) - parseFloat(ticket.amount) >= 0) { %>alert-success<% } else { %>alert-danger<% } %>">
+                    <p class="mb-0">
+                      <strong>¥<%= (parseFloat(ticket.winningAmount || 0) - parseFloat(ticket.amount)).toFixed(2) %></strong>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex gap-2 mt-4">
+                <a href="/lottery/edit/<%= ticket.id %>" class="btn btn-warning">Edit</a>
+                <form method="POST" action="/lottery/delete/<%= ticket.id %>" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+                  <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                <a href="/lottery" class="btn btn-secondary">Back to Lottery</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
